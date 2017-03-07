@@ -15,14 +15,13 @@ namespace ChatRoom
         {
             try
             {
-                Int32 port = 2017;
+                int port = 2017;
                 IPAddress localAddr = IPAddress.Parse("192.168.0.137");
                 // TcpListener server = new TcpListener(port);
                 TcpListener server = new TcpListener(localAddr,port);
 
                 // Start listening for client requests.
                 server.Start();
-                //server.AcceptSocket();      //I added this
 
                 // Buffer for reading data
                 Byte[] bytes = new Byte[256];
@@ -70,11 +69,11 @@ namespace ChatRoom
             {
                 Console.WriteLine("SocketException: {0}", e);
             }
-            finally
-            {
-                // Stop listening for new clients.
-                //server.Stop();
-            }
+            //finally
+            //{
+            //    // Stop listening for new clients.
+            //    //server.Stop();
+            //}
 
 
             Console.WriteLine("\nHit enter to continue...");
