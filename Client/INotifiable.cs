@@ -8,5 +8,6 @@ namespace Client
 {
     interface INotifiable
     {
+        void ReceiveMessage(string messageReceived);
     }
 }

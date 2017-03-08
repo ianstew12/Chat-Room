@@ -13,42 +13,49 @@ namespace Client
     {
         static void Main(string[] args)
         {
-
             try
             {
-                
-                int port = 2017;
-                TcpClient client = new TcpClient("192.168.0.137", port);
-                string message = "Hello, are you there?";
+                IPAddress address = IPAddress.Parse("192.168.0.137");
+                Client client = new Client(address, 2017);
+                client.GetConnection();
+                client.StartClient();
 
-                Byte[] data = System.Text.Encoding.UTF8.GetBytes(message);
 
-                // Get a client stream for reading and writing.
-                // Stream stream = client.GetStream();
 
-                NetworkStream stream = client.GetStream();
+                //IPAddress address = IPAddress.Parse(ipAddress);
+                ////create connection
+                //int port = 2017;
+                //TcpClient client = new TcpClient("192.168.0.137", port);
 
-                // Send the message to the connected TcpServer. 
-                stream.Write(data, 0, data.Length);
 
-                Console.WriteLine("Sent: {0}", message);
+                //string message = "Hello, are you there?";
 
-                // Receive the TcpServer.response.
+                //Byte[] data = System.Text.Encoding.UTF8.GetBytes(message);
 
-                // Buffer to store the response bytes.
-                data = new Byte[256];
+                //// Get a client stream for reading and writing.
 
-                // String to store the response UTF8 representation.
+                //NetworkStream stream = client.GetStream();
+
+                //// Send the message to the connected TcpServer. 
+                //stream.Write(data, 0, data.Length);
+
+                //Console.WriteLine("Sent: {0}", message);
+
+                //// Receive the TcpServer.response.
+
+                //// Buffer to store the response bytes.
+                //data = new Byte[256];
+
+                //// String to store the response UTF8 representation.
                 //String responseData = String.Empty;
-                String responseData = "response string";
-                // Read the first batch of the TcpServer response bytes.
-                Int32 bytes = stream.Read(data, 0, data.Length);
-                responseData = System.Text.Encoding.UTF8.GetString(data, 0, bytes);
-                Console.WriteLine("Received: {0}", responseData);
+                //// Read the first batch of the TcpServer response bytes.
+                //Int32 bytes = stream.Read(data, 0, data.Length);
+                //responseData = System.Text.Encoding.UTF8.GetString(data, 0, bytes);
+                //Console.WriteLine("Received: {0}", responseData);
 
-                // Close everything.
-                stream.Close();
-                client.Close();
+                //// Close everything.
+                //stream.Close();
+                //client.Close();
             }
             catch (ArgumentNullException e)
             {

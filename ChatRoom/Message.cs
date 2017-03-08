@@ -8,5 +8,7 @@ namespace ChatRoom
 {
     class Message
     {
+        string text;
+        //int id;
     }
 }

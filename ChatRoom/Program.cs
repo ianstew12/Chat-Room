@@ -15,54 +15,10 @@ namespace ChatRoom
         {
             try
             {
-                int port = 2017;
-                IPAddress localAddr = IPAddress.Parse("192.168.0.137");
-                TcpListener server = new TcpListener(localAddr,port);
-
+                Server server = new Server();
                 // Start listening for client requests to connect
-                server.Start();
-
-                // Buffer for reading data
-                Byte[] bytes = new Byte[256];
-                String data = null;
-
-                // Enter the infinite listening loop.
-                while (true)
-                {
-                    Console.Write("Waiting for a connection... ");
-
-                    // Perform a blocking call to accept requests.
-                    // You could also user server.AcceptSocket() here.
-                    TcpClient client = server.AcceptTcpClient();
-                    Console.WriteLine("Connected!");
-
-                    data = null;
-
-                    // Get a stream object for reading and writing
-                    NetworkStream stream = client.GetStream();
-
-                    int i;
-
-                    // Loop to receive all the data sent by the client.
-                    while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
-                    {
-                        //Encode to UTF8 (not ASCII)
-                        data = System.Text.Encoding.UTF8.GetString(bytes, 0, i);
-                        Console.WriteLine("Received: {0}", data);
-
-                        // Process the data sent by the client.
-                        data = data.ToUpper();
-
-                        byte[] msg = System.Text.Encoding.UTF8.GetBytes(data);
-
-                        // Send back a response.
-                        stream.Write(msg, 0, msg.Length);
-                        Console.WriteLine("Sent: {0}", data);
-                    }
-
-                    // Shutdown and end connection
-                    client.Close();
-                }
+                server.StartServer();
+                server.ListenForClients();          
             }
             catch (SocketException e)
             {

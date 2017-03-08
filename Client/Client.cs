@@ -9,16 +9,19 @@ using System.Net;
 
 namespace Client
 {
-    public class Client :  TcpClient, INotifiable
+    public class Client    //, INotifiable
     {
         private string name;
         IPAddress ipAddress;
+        public TcpClient client;
 
-
-        public Client()
+        public Client(IPAddress ipAddress,int port)
         {
-            ipAddress = GetLocalIPAddress();
-            name = RequestName();
+
+            //   name = RequestName();
+            client = new TcpClient(ipAddress.ToString(), port);
+            
+            
         }
        
         public static IPAddress GetLocalIPAddress()
@@ -46,35 +49,51 @@ namespace Client
             set { name = value; }
         }
 
-        public void SendMessage(string messageToSend)//, IPAddress serverIPAdress)
+        public void StartClient()
         {
+            SendMessage();
+            ReceiveMessage();
 
+        }
+
+        public void SendMessage()//, IPAddress serverIPAdress)
+        {
+            string messageToSend = GetMessageToSend();
             Byte[] data = System.Text.Encoding.UTF8.GetBytes(messageToSend);
-
-            NetworkStream stream = GetStream();
-            
+            //
+            //client.Connect()
+            NetworkStream stream = client.GetStream();
             stream.Write(data, 0, data.Length);
 
             Console.WriteLine("Sent: {0}", messageToSend);
         }
 
-        public void ReceiveMessage(string messageReceived)
+        public string GetMessageToSend()
         {
-            // Receive the TcpServer.response.
-
-            // Buffer to store the response bytes.
-            Byte[] data = System.Text.Encoding.UTF8.GetBytes(messageReceived);
-
-            NetworkStream stream = GetStream();
+            Console.WriteLine("Enter message:");
+             string MessageToSend = Console.ReadLine();
+            return MessageToSend;
+        }
+        public void ReceiveMessage()
+        {
+            string message = Console.ReadLine();
+            Byte[] data = System.Text.Encoding.UTF8.GetBytes(message);
+            NetworkStream stream = client.GetStream();
             data = new Byte[256];
-
-            // String to store the response UTF8 representation.
-            String responseData = String.Empty;
-            // Read the first batch of the TcpServer response bytes.
+            string responseData = string.Empty;
             Int32 bytes = stream.Read(data, 0, data.Length);
             responseData = System.Text.Encoding.UTF8.GetString(data, 0, bytes);
             Console.WriteLine("Received: {0}", responseData);
+            stream.Close();
+            //client.Close();
         }
 
+        public TcpClient GetConnection()
+        {
+            int port = 2017;
+            TcpClient client = new TcpClient("192.168.0.137", port);
+            return client;
+        }
+  
     }
 }
