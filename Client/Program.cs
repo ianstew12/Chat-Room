@@ -20,42 +20,6 @@ namespace Client
                 client.GetConnection();
                 client.StartClient();
 
-
-
-                //IPAddress address = IPAddress.Parse(ipAddress);
-                ////create connection
-                //int port = 2017;
-                //TcpClient client = new TcpClient("192.168.0.137", port);
-
-
-                //string message = "Hello, are you there?";
-
-                //Byte[] data = System.Text.Encoding.UTF8.GetBytes(message);
-
-                //// Get a client stream for reading and writing.
-
-                //NetworkStream stream = client.GetStream();
-
-                //// Send the message to the connected TcpServer. 
-                //stream.Write(data, 0, data.Length);
-
-                //Console.WriteLine("Sent: {0}", message);
-
-                //// Receive the TcpServer.response.
-
-                //// Buffer to store the response bytes.
-                //data = new Byte[256];
-
-                //// String to store the response UTF8 representation.
-                //String responseData = String.Empty;
-                //// Read the first batch of the TcpServer response bytes.
-                //Int32 bytes = stream.Read(data, 0, data.Length);
-                //responseData = System.Text.Encoding.UTF8.GetString(data, 0, bytes);
-                //Console.WriteLine("Received: {0}", responseData);
-
-                //// Close everything.
-                //stream.Close();
-                //client.Close();
             }
             catch (ArgumentNullException e)
             {

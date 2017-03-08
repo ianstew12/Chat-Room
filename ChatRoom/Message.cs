@@ -9,6 +9,9 @@ namespace ChatRoom
     class Message
     {
         string text;
+        
         //int id;
+
+        //text = Client.name +": "+ text;
     }
 }

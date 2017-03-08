@@ -18,7 +18,7 @@ namespace Client
         public Client(IPAddress ipAddress,int port)
         {
 
-            //   name = RequestName();
+             name = RequestName();
             client = new TcpClient(ipAddress.ToString(), port);
             
             
@@ -72,6 +72,7 @@ namespace Client
         {
             Console.WriteLine("Enter message:");
              string MessageToSend = Console.ReadLine();
+            MessageToSend = name + ": " + MessageToSend;
             return MessageToSend;
         }
         public void ReceiveMessage()
