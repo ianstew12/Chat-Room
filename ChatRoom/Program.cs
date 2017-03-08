@@ -17,17 +17,16 @@ namespace ChatRoom
             {
                 int port = 2017;
                 IPAddress localAddr = IPAddress.Parse("192.168.0.137");
-                // TcpListener server = new TcpListener(port);
                 TcpListener server = new TcpListener(localAddr,port);
 
-                // Start listening for client requests.
+                // Start listening for client requests to connect
                 server.Start();
 
                 // Buffer for reading data
                 Byte[] bytes = new Byte[256];
                 String data = null;
 
-                // Enter the listening loop.
+                // Enter the infinite listening loop.
                 while (true)
                 {
                     Console.Write("Waiting for a connection... ");
@@ -54,7 +53,7 @@ namespace ChatRoom
                         // Process the data sent by the client.
                         data = data.ToUpper();
 
-                        byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
+                        byte[] msg = System.Text.Encoding.UTF8.GetBytes(data);
 
                         // Send back a response.
                         stream.Write(msg, 0, msg.Length);
@@ -69,12 +68,6 @@ namespace ChatRoom
             {
                 Console.WriteLine("SocketException: {0}", e);
             }
-            //finally
-            //{
-            //    // Stop listening for new clients.
-            //    //server.Stop();
-            //}
-
 
             Console.WriteLine("\nHit enter to continue...");
             Console.Read();

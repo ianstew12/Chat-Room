@@ -1,84 +1,66 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Net;
+using System.Net.Sockets;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
 namespace Client
 {
     class Program
     {
         static void Main(string[] args)
         {
+
             try
             {
+                
                 int port = 2017;
-                IPAddress localAddr = IPAddress.Parse("192.168.0.137");
-                // TcpListener server = new TcpListener(port);
-                TcpListener server = new TcpListener(localAddr, port);
+                TcpClient client = new TcpClient("192.168.0.137", port);
+                string message = "Hello, are you there?";
 
-                // Start listening for client requests.
-                server.Start();
+                Byte[] data = System.Text.Encoding.UTF8.GetBytes(message);
 
-                // Buffer for reading data
-                Byte[] bytes = new Byte[256];
-                String data = null;
+                // Get a client stream for reading and writing.
+                // Stream stream = client.GetStream();
 
-                // Enter the listening loop.
-                while (true)
-                {
-                    Console.Write("Waiting for a connection... ");
+                NetworkStream stream = client.GetStream();
 
-                    // Perform a blocking call to accept requests.
-                    // You could also user server.AcceptSocket() here.
-                    TcpClient client = server.AcceptTcpClient();
-                    Console.WriteLine("Connected!");
+                // Send the message to the connected TcpServer. 
+                stream.Write(data, 0, data.Length);
 
-                    data = null;
+                Console.WriteLine("Sent: {0}", message);
 
-                    // Get a stream object for reading and writing
-                    NetworkStream stream = client.GetStream();
+                // Receive the TcpServer.response.
 
-                    int i;
+                // Buffer to store the response bytes.
+                data = new Byte[256];
 
-                    // Loop to receive all the data sent by the client.
-                    while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
-                    {
-                        // Translate data bytes to a UTF8 string.
-                        data = System.Text.Encoding.UTF8.GetString(bytes, 0, i);
-                        Console.WriteLine("Received: {0}", data);
+                // String to store the response UTF8 representation.
+                //String responseData = String.Empty;
+                String responseData = "response string";
+                // Read the first batch of the TcpServer response bytes.
+                Int32 bytes = stream.Read(data, 0, data.Length);
+                responseData = System.Text.Encoding.UTF8.GetString(data, 0, bytes);
+                Console.WriteLine("Received: {0}", responseData);
 
-                        // Process the data sent by the client.
-                        data = data.ToUpper();
-
-                        byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
-
-                        // Send back a response.
-                        stream.Write(msg, 0, msg.Length);
-                        Console.WriteLine("Sent: {0}", data);
-                    }
-
-                    // Shutdown and end connection
-                    client.Close();
-                }
+                // Close everything.
+                stream.Close();
+                client.Close();
+            }
+            catch (ArgumentNullException e)
+            {
+                Console.WriteLine("ArgumentNullException: {0}", e);
             }
             catch (SocketException e)
             {
                 Console.WriteLine("SocketException: {0}", e);
             }
-            //finally
-            //{
-            //    // Stop listening for new clients.
-            //    //server.Stop();
-            //}
 
-
-            Console.WriteLine("\nHit enter to continue...");
+            Console.WriteLine("\n Press Enter to continue...");
             Console.Read();
-
         }
     }
-
 }
