@@ -47,8 +47,8 @@ namespace ChatRoom
                     // Loop to receive all the data sent by the client.
                     while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
                     {
-                        // Translate data bytes to a ASCII string.
-                        data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
+                        //Encode to UTF8 (not ASCII)
+                        data = System.Text.Encoding.UTF8.GetString(bytes, 0, i);
                         Console.WriteLine("Received: {0}", data);
 
                         // Process the data sent by the client.
