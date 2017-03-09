@@ -14,13 +14,12 @@ namespace Client
         static void Main(string[] args)
         {
             try
-            {
-                IPAddress address = IPAddress.Parse("192.168.0.137");
-                Client client = new Client(address, 2017);
-                client.GetConnection();
-                client.StartClient();
 
-            }
+            {  IPAddress address = IPAddress.Parse("192.168.0.137"); //server's
+               Client client = new Client(address, 2017);
+               client.GetConnection();
+               client.StartClient();
+                }
             catch (ArgumentNullException e)
             {
                 Console.WriteLine("ArgumentNullException: {0}", e);

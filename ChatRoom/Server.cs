@@ -108,9 +108,11 @@ namespace ChatRoom
                     stream.Write(msg, 0, msg.Length);
                     Console.WriteLine("Sent: {0}", data);
 
-                   // stream.Close();
-                    client.Close();
+                    //stream.Close();
+                    //client.Close();
                 }
+                //stream.Close();
+                client.Close();
             }
         }
 

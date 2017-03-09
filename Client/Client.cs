@@ -14,14 +14,13 @@ namespace Client
         private string name;
         IPAddress ipAddress;
         public TcpClient client;
+        //int port = 2017;
+        
 
         public Client(IPAddress ipAddress,int port)
         {
-
              name = RequestName();
             client = new TcpClient(ipAddress.ToString(), port);
-            
-            
         }
        
         public static IPAddress GetLocalIPAddress()
@@ -42,7 +41,7 @@ namespace Client
             Console.WriteLine("Enter your name");
             return name = Console.ReadLine();
         }
-        
+
         public string Name
         {
             get { return name; }
@@ -53,15 +52,13 @@ namespace Client
         {
             SendMessage();
             ReceiveMessage();
-
         }
 
         public void SendMessage()//, IPAddress serverIPAdress)
         {
             string messageToSend = GetMessageToSend();
             Byte[] data = System.Text.Encoding.UTF8.GetBytes(messageToSend);
-            //
-            //client.Connect()
+           
             NetworkStream stream = client.GetStream();
             stream.Write(data, 0, data.Length);
 
@@ -75,6 +72,7 @@ namespace Client
             MessageToSend = name + ": " + MessageToSend;
             return MessageToSend;
         }
+
         public void ReceiveMessage()
         {
             string message = Console.ReadLine();

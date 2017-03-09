@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace ChatRoom
 {
-    class Message
+    public class Message
     {
         string text;
-        
-        //int id;
-
-        //text = Client.name +": "+ text;
-    }
+        int id;
+   }
 }
