@@ -19,7 +19,6 @@ namespace ChatRoom
 
         public Client(IPAddress ipAddress, int port)
         {
-            
             client = new TcpClient(ipAddress.ToString(), port);
         }
 

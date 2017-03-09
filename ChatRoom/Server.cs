@@ -23,7 +23,7 @@ namespace ChatRoom
         public Server()
         {
             ipAddress = GetLocalIPAddress();
-            server = new TcpListener(ipAddress, port);             //concrete subject?
+            server = new TcpListener(ipAddress, port);            
         }
 
         public static IPAddress GetLocalIPAddress()
@@ -56,29 +56,47 @@ namespace ChatRoom
         {
             while (true)
             {
-                Console.Write("Waiting for a connection... ");
-
-                //HERE I WANT TO ADD TO DICTIONARY AND START NEW THREAD
-
-                
-                TcpClient client = server.AcceptTcpClient();
-                //receive message client name from client
-                //add client and client name to dictionary
-                //ReceiveMessageFromClient(client);
+                Console.Write("Waiting for a connection... ");              
+                TcpClient client = server.AcceptTcpClient();              
                 connectedClients.Add(client, "placeHolder");
-
+                
                 Console.WriteLine("Connected!");
-                Task listenForMessages = Task.Run(() => ListenForMessages(client));
-               
+                Task listenForMessages = Task.Run(() => ListenForMessages(client));             
             }
         }
+     
 
         public void ReceiveMessageFromClient(TcpClient client)
         {
+            string message = Console.ReadLine();
+            Byte[] data = System.Text.Encoding.UTF8.GetBytes(message);
             NetworkStream stream = GetClientStream(client);
+            data = new Byte[256];
+            string responseData = "";
+            Int32 bytes = stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.UTF8.GetString(data, 0, bytes);
+            Console.WriteLine("Received: {0}", responseData);
+            stream.Close();
+        }
 
+        public void ReviseDictionaryForNameMessages(string message, TcpClient client)
+        {
+            if (message.Length > 14)
+            {
+                string firstFifteen = message.Substring(0, 15);
+                if (firstFifteen == "!!!!newName!!!!")
+                {
+                    message = message.Substring(15, (message.Length - 15));
+                    connectedClients[client] = message;
+                }
+            } 
+        }
+
+        public void HandleMessage()
+        {
             
         }
+
         public NetworkStream GetClientStream(TcpClient client)
         {
              NetworkStream stream = client.GetStream();
@@ -94,8 +112,14 @@ namespace ChatRoom
             int i;
             while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
             {
-                //Encode to UTF8 (not ASCII)
+                
                 data = System.Text.Encoding.UTF8.GetString(bytes, 0, i);
+
+                //If string sent is a name, update dictionary
+                ReviseDictionaryForNameMessages(data, client);
+                messages.Enqueue(data);
+                DisplayQueuedMessages(connectedClients);
+                
                 Console.WriteLine("Received: {0}", data);
 
                 // Process the data sent by the client.
@@ -111,17 +135,28 @@ namespace ChatRoom
             //stream.Close();
                client.Close();
         }
-        //public string ParseMessage (string message)
-        //{
-        //    //if first characters are formatted name change dictionary name
-        //    string firstFourteen = message.Substring(0, 13);
-        //    if (firstFourteen== "!!!!newName!!!!")
-        //    {
-        //       // message = message.Substring(14, message.Length-1);
-        //        //connectedClients[]
-        //       // return connectedClients.
-        //    }
-        //}
+
+        Queue<string> messages = new Queue<string>();
+
+        public void DisplayQueuedMessages(Dictionary<TcpClient, string> dictionary)
+        {
+            if(messages.Count > 0)
+            {
+                foreach (string message in messages)
+                {
+                   
+                        foreach (KeyValuePair<TcpClient,string> pair in connectedClients)
+                    {
+                        NetworkStream stream = pair.Key.GetStream();
+
+                        Byte[] data = System.Text.Encoding.UTF8.GetBytes(message);
+                        stream.Write(data,0, data.Length);
+
+                    }
+                  //  messages.Dequeue(message);
+                }
+            }
+        }
 
         private void StartServerTasks()
         {
@@ -278,7 +313,7 @@ namespace ChatRoom
 
 
 
-        Queue<Message> messages = new Queue<Message>();
+      
 
 
 

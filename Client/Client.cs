@@ -20,16 +20,27 @@ namespace Client
 
         public Client(IPAddress ipAddress,int port)
         {
-             name = RequestName();
+            name = RequestName();
             formattedName = FormatNameForServer();
-
             client = new TcpClient(ipAddress.ToString(), port);
-            Byte[] data = System.Text.Encoding.UTF8.GetBytes(formattedName);
+            SendFormattedName();
+        }
 
+       public void SendFormattedName()
+        {
+            SendOneMessage(formattedName);
+        }
+
+        public void SendOneMessage(string oneMessage)
+        {
+            Byte[] data = System.Text.Encoding.UTF8.GetBytes(oneMessage);
             NetworkStream stream = client.GetStream();
             stream.Write(data, 0, data.Length);
+            Console.WriteLine("Sent: {0}", oneMessage);
         }
-       
+
+
+
         public static IPAddress GetLocalIPAddress()
         {
             var host = Dns.GetHostEntry(Dns.GetHostName());
@@ -67,9 +78,11 @@ namespace Client
             ReceiveMessage();
         }
 
+
         public void SendMessage()//, IPAddress serverIPAdress)
         {
             string messageToSend = GetMessageToSend();
+            AddNameToMessage(messageToSend);
             Byte[] data = System.Text.Encoding.UTF8.GetBytes(messageToSend);
            
             NetworkStream stream = client.GetStream();
@@ -81,9 +94,14 @@ namespace Client
         public string GetMessageToSend()
         {
             Console.WriteLine("Enter message:");
-             string MessageToSend = Console.ReadLine();
-            MessageToSend = name + ": " + MessageToSend;
-            return MessageToSend;
+             string messageToSend = Console.ReadLine();
+            AddNameToMessage(messageToSend);                //split methods
+            return messageToSend;
+        }
+        public string AddNameToMessage(string message)      //TODO
+        {
+            message = name + ": " + message;
+            return message;
         }
 
         public void ReceiveMessage()
