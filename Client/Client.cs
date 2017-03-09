@@ -14,13 +14,20 @@ namespace Client
         private string name;
         IPAddress ipAddress;
         public TcpClient client;
-        //int port = 2017;
+        int port = 2017;
+        string formattedName;
         
 
         public Client(IPAddress ipAddress,int port)
         {
              name = RequestName();
+            formattedName = FormatNameForServer();
+
             client = new TcpClient(ipAddress.ToString(), port);
+            Byte[] data = System.Text.Encoding.UTF8.GetBytes(formattedName);
+
+            NetworkStream stream = client.GetStream();
+            stream.Write(data, 0, data.Length);
         }
        
         public static IPAddress GetLocalIPAddress()
@@ -40,6 +47,12 @@ namespace Client
         {
             Console.WriteLine("Enter your name");
             return name = Console.ReadLine();
+        }
+        public string FormatNameForServer()
+        {
+            string formattedNameForServer;
+            formattedNameForServer = "!!!!newName!!!!" + name;
+            return formattedNameForServer;
         }
 
         public string Name
@@ -93,6 +106,13 @@ namespace Client
             TcpClient client = new TcpClient("192.168.0.137", port);
             return client;
         }
-  
+
+        private void StartClientTasks()
+        {
+            Task SendMessageTask = Task.Run(() => SendMessage());
+            Task ReceiveMessageTask = Task.Run(() => ReceiveMessage());    
+            Task.WaitAll();
+        }
+
     }
 }

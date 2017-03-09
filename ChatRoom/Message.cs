@@ -9,6 +9,7 @@ namespace ChatRoom
     public class Message
     {
         string text;
+        string senderName;
         int id;
    }
 }

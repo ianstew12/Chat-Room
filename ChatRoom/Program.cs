@@ -15,11 +15,11 @@ namespace ChatRoom
         {
             try
             {
-                Server server = new Server();
-                // Start listening for client requests to connect
-                server.StartServer();
-                server.ListenForClients();          
+                Server server = new Server();      
+                server.StartServer();   
+                server.RunServer();
             }
+
             catch (SocketException e)
             {
                 Console.WriteLine("SocketException: {0}", e);

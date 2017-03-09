@@ -16,14 +16,18 @@ namespace Client
             try
 
             {  IPAddress address = IPAddress.Parse("192.168.0.137"); //server's
-               Client client = new Client(address, 2017);
+
+                
+                Client client = new Client(address, 2017);
                client.GetConnection();
                client.StartClient();
                 }
+
             catch (ArgumentNullException e)
             {
                 Console.WriteLine("ArgumentNullException: {0}", e);
             }
+
             catch (SocketException e)
             {
                 Console.WriteLine("SocketException: {0}", e);
